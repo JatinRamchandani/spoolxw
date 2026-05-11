@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.size() >= 3 && email.size() <= 256 && email.matches('^[^@]+@[^@]+\\.[^@]+$');
+    }
+
+    function isValidWaitlistSignup(data) {
+      return data.keys().hasAll(['email', 'createdAt']) && 
+             data.keys().size() == 2 &&
+             isValidEmail(data.email) &&
+             data.createdAt == request.time;
+    }
+
+    // Waitlist collection: allow create for anyone, but no read/update/delete
+    match /waitlist/{signupId} {
+      allow create: if isValidWaitlistSignup(request.resource.data);
+      // No one can read the list from the client side for privacy
+      allow read, update, delete: if false;
+    }
+  }
+}
