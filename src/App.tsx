@@ -11,12 +11,12 @@ const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 // ── Word-by-word scroll reveal ──
 function WordReveal({ text }: { text: string }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-12%" });
+  const inView = useInView(ref, { once: true, margin: "-10%" });
   return (
     <span ref={ref} aria-label={text}>
       {text.split(" ").map((word, i) => (
-        <motion.span key={i} className="inline-block mr-[0.26em]"
-          initial={{ opacity: 0.07, y: 8 }}
+        <motion.span key={i} className="inline-block mr-[0.25em]"
+          initial={{ opacity: 0.07, y: 6 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -32,10 +32,10 @@ function FadeIn({ children, delay = 0, className = "" }: {
   children: React.ReactNode; delay?: number; className?: string; key?: React.Key;
 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-8%" });
+  const inView = useInView(ref, { once: true, margin: "-6%" });
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -48,8 +48,7 @@ function FadeIn({ children, delay = 0, className = "" }: {
 const INTENT_PHRASES = [
   `"anyone know a PM tool that doesn't feel like enterprise bloat?"`,
   `"switching from Asana next month, need recs from fellow founders"`,
-  `"been manually searching twitter for early adopters all week lol"`,
-  `"is there anything that helps SaaS founders find leads on social?"`,
+  `"been manually searching twitter for early adopters all week"`,
   `"frustrated with cold outreach — open to smarter ways to find customers"`,
   `"looking for people who actually need my product, not spray-and-pray"`,
 ];
@@ -61,14 +60,14 @@ function IntentTicker() {
     return () => clearInterval(id);
   }, []);
   return (
-    <div className="overflow-hidden h-6 flex items-center">
+    <div className="overflow-hidden h-6 flex items-center max-w-full">
       <AnimatePresence mode="wait">
         <motion.p key={index}
-          className="text-[13px] font-mono text-gray-500"
+          className="text-[12px] sm:text-[13px] font-mono text-gray-500 truncate min-w-0 w-full"
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3 }}
         >
-          <span className="font-semibold text-[#2563EB] mr-2">@founder:</span>
+          <span className="font-semibold text-[#2563EB] mr-1.5">@founder:</span>
           {INTENT_PHRASES[index]}
         </motion.p>
       </AnimatePresence>
@@ -89,7 +88,7 @@ const EXAMPLE_LEADS = [
   {
     handle: "@sara_builds",
     time: "2h ago",
-    body: "does anyone have a PM tool that doesn't require a 2hr onboarding session? we're a small startup, jira feels like overkill.",
+    body: "does anyone have a PM tool that doesn't require a 2hr onboarding? we're a small startup, jira feels like overkill.",
     intent: "Pain-driven search",
     fitLabel: "Strong match",
     fitStrong: true,
@@ -97,7 +96,7 @@ const EXAMPLE_LEADS = [
   {
     handle: "@mikepascale",
     time: "5h ago",
-    body: "open to recs — we've been using Notion for tracking but it's not cutting it for engineering workflows. what are people using?",
+    body: "open to recs — Notion isn't cutting it for our engineering workflows. what are people using?",
     intent: "Seeking alternatives",
     fitLabel: "Good match",
     fitStrong: false,
@@ -106,34 +105,34 @@ const EXAMPLE_LEADS = [
 
 function LeadPreviewSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
+  const inView = useInView(ref, { once: true, margin: "-8%" });
 
   return (
-    <section className="py-24 sm:py-32 px-5 sm:px-8 border-t border-gray-200">
+    <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
       <div className="max-w-6xl mx-auto">
-        <FadeIn className="mb-10">
+        <FadeIn className="mb-8 sm:mb-10">
           <p className="text-[10px] uppercase tracking-[0.15em] font-medium mb-3 text-gray-400">What you'd receive</p>
-          <h2 className="font-display font-bold text-[26px] sm:text-[34px] lg:text-[40px] leading-tight mb-2 text-gray-900">
+          <h2 className="font-display font-bold text-[24px] sm:text-[32px] lg:text-[40px] leading-tight mb-2 text-gray-900">
             Your daily lead digest.
           </h2>
-          <p className="text-[15px] max-w-[460px] leading-[1.7] text-gray-500">
+          <p className="text-[14px] sm:text-[15px] max-w-[460px] leading-[1.7] text-gray-500">
             Every morning, a curated list of X conversations that match your product. Real posts, full context, no noise.
           </p>
         </FadeIn>
 
-        <div ref={ref} className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-          {/* Header */}
-          <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-            <div className="flex items-center gap-2.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB]/50" />
-              <span className="text-[11px] font-mono tracking-wide text-gray-400">spoolx · daily digest</span>
+        <div ref={ref} className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+          {/* Header bar */}
+          <div className="px-4 sm:px-5 py-2.5 sm:py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB]/50 shrink-0" />
+              <span className="text-[10px] sm:text-[11px] font-mono tracking-wide text-gray-400">spoolx · daily digest</span>
             </div>
-            <span className="text-[10px] font-mono italic text-gray-300">example output</span>
+            <span className="text-[9px] sm:text-[10px] font-mono italic text-gray-300">example output</span>
           </div>
 
           {/* Query */}
-          <div className="px-5 py-2.5 border-b border-gray-100 bg-gray-50/50">
-            <p className="text-[11px] font-mono text-gray-400">
+          <div className="px-4 sm:px-5 py-2 sm:py-2.5 border-b border-gray-100 bg-gray-50/50 overflow-hidden">
+            <p className="text-[10px] sm:text-[11px] font-mono text-gray-400 truncate">
               matching:{" "}
               <span className="font-medium text-gray-600">"project management" · "switching" · "startup"</span>
             </p>
@@ -143,37 +142,40 @@ function LeadPreviewSection() {
           <div className="divide-y divide-gray-100">
             {EXAMPLE_LEADS.map((lead, i) => (
               <motion.div key={lead.handle}
-                className="px-5 py-5 hover:bg-gray-50/70 transition-colors duration-200"
+                className="px-4 sm:px-5 py-4 sm:py-5 hover:bg-gray-50/70 transition-colors duration-200"
                 initial={{ opacity: 0, y: 8 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="flex items-start justify-between gap-4 mb-2.5">
-                  <div className="flex items-center gap-2.5">
+                {/* Row top: avatar + handle + fit label */}
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
                       <span className="text-[9px] font-mono text-gray-400">{lead.handle[1].toUpperCase()}</span>
                     </div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-[13px] font-semibold text-gray-800">{lead.handle}</span>
-                      <span className="text-[11px] font-mono text-gray-400">{lead.time}</span>
+                    <div className="flex items-baseline gap-1.5 min-w-0">
+                      <span className="text-[12px] sm:text-[13px] font-semibold text-gray-800 truncate">{lead.handle}</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-gray-400 shrink-0">{lead.time}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0 pt-0.5">
-                    <span className={`text-[11px] font-medium ${lead.fitStrong ? "text-[#2563EB]" : "text-[#93c5fd]"}`}>
+                  {/* Fit label — always visible, intent label hidden on mobile */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className={`text-[10px] sm:text-[11px] font-medium whitespace-nowrap ${lead.fitStrong ? "text-[#2563EB]" : "text-[#93c5fd]"}`}>
                       {lead.fitLabel}
                     </span>
-                    <span className="text-[10px] font-mono text-gray-400">· {lead.intent}</span>
+                    <span className="hidden sm:inline text-[10px] font-mono text-gray-400 whitespace-nowrap">· {lead.intent}</span>
                   </div>
                 </div>
-                <p className="text-[14px] leading-relaxed pl-[34px] text-gray-500">{lead.body}</p>
+                {/* Body text — no left indent on mobile */}
+                <p className="text-[13px] sm:text-[14px] leading-relaxed text-gray-500 pl-0 sm:pl-8">{lead.body}</p>
               </motion.div>
             ))}
           </div>
 
           {/* Footer */}
-          <div className="px-5 py-2.5 border-t border-gray-100 bg-gray-50 flex justify-between">
-            <span className="text-[11px] font-mono text-gray-400">3 of 12 leads today</span>
-            <span className="text-[11px] font-mono text-gray-400">9 more →</span>
+          <div className="px-4 sm:px-5 py-2 sm:py-2.5 border-t border-gray-100 bg-gray-50 flex justify-between">
+            <span className="text-[10px] sm:text-[11px] font-mono text-gray-400">3 of 12 leads today</span>
+            <span className="text-[10px] sm:text-[11px] font-mono text-gray-400">9 more →</span>
           </div>
         </div>
       </div>
@@ -213,14 +215,14 @@ function WaitlistForm({ id = "waitlist-form" }: { id?: string }) {
   }
 
   return (
-    <form id={id} onSubmit={submit} className="flex flex-col sm:flex-row gap-2 w-full max-w-[400px]">
+    <form id={id} onSubmit={submit} className="flex flex-col sm:flex-row gap-2 w-full sm:max-w-[400px]">
       <input type="email" required placeholder="your@email.com"
         value={email} disabled={status === "loading"}
         onChange={e => setEmail(e.target.value)}
-        className="flex-1 min-w-0 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2563EB]/40 focus:ring-2 focus:ring-[#2563EB]/10 transition-all"
+        className="flex-1 min-w-0 bg-white border border-gray-200 rounded-xl px-4 py-3 sm:py-2.5 text-[15px] sm:text-[14px] text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#2563EB]/40 focus:ring-2 focus:ring-[#2563EB]/10 transition-all"
       />
       <button type="submit" disabled={status === "loading"}
-        className="px-5 py-2.5 rounded-xl bg-[#2563EB] text-white text-[14px] font-semibold hover:bg-[#1d4ed8] transition-all active:scale-[0.98] disabled:opacity-50 shrink-0 flex items-center justify-center gap-2"
+        className="w-full sm:w-auto px-5 py-3 sm:py-2.5 rounded-xl bg-[#2563EB] text-white text-[15px] sm:text-[14px] font-semibold hover:bg-[#1d4ed8] transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
       >
         {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Request access"}
       </button>
@@ -251,8 +253,8 @@ export default function App() {
           ? "bg-[#F0F0EE]/95 backdrop-blur-xl border-gray-200"
           : "bg-[#F0F0EE] border-gray-200"
       }`}>
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
-          <a href="/" className="text-[18px] font-display font-bold tracking-tight text-gray-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+          <a href="/" className="text-[17px] sm:text-[18px] font-display font-bold tracking-tight text-gray-900">
             spoolx
           </a>
 
@@ -262,7 +264,7 @@ export default function App() {
           </nav>
 
           <button onClick={scrollToWaitlist}
-            className="text-[13px] font-medium px-4 py-1.5 rounded-full border border-[#2563EB]/30 text-[#2563EB] hover:border-[#2563EB]/60 transition-all"
+            className="text-[12px] sm:text-[13px] font-medium px-3.5 sm:px-4 py-1.5 rounded-full border border-[#2563EB]/30 text-[#2563EB] hover:border-[#2563EB]/60 transition-all whitespace-nowrap"
           >
             Request access
           </button>
@@ -270,10 +272,11 @@ export default function App() {
       </header>
 
       {/* ── HERO ── */}
-      <section className="min-h-screen flex flex-col justify-center px-5 sm:px-8 pt-20 pb-20">
+      <section className="min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="max-w-6xl mx-auto w-full">
 
-          <motion.div className="mb-10"
+          {/* Ticker */}
+          <motion.div className="mb-8 sm:mb-10"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 0.15, duration: 0.7 }}
           >
@@ -283,20 +286,21 @@ export default function App() {
             <IntentTicker />
           </motion.div>
 
+          {/* Headline — no hardcoded line breaks, let text flow naturally */}
           <motion.h1
-            className="font-display font-bold leading-[1.05] tracking-tight mb-5 text-[38px] sm:text-[52px] lg:text-[60px] text-gray-900"
+            className="font-display font-bold leading-[1.08] tracking-tight mb-5 text-[30px] sm:text-[46px] lg:text-[58px] text-gray-900"
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           >
-            The people who need<br />
-            your product are{" "}
-            <span className="italic text-gray-400">tweeting</span><br />
+            The people who need your product are{" "}
+            <span className="italic text-gray-400">tweeting</span>{" "}
             right now.
           </motion.h1>
 
+          {/* Sub */}
           <motion.p
-            className="text-[15px] sm:text-[16px] max-w-[480px] mb-9 leading-[1.75] text-gray-500"
+            className="text-[14px] sm:text-[16px] max-w-[480px] mb-8 sm:mb-9 leading-[1.75] text-gray-500"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -304,6 +308,7 @@ export default function App() {
             spoolx monitors X for high-intent conversations matching your product, then delivers a daily digest of warm leads — people actively looking for what you built.
           </motion.p>
 
+          {/* Form */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -312,7 +317,7 @@ export default function App() {
             <div id="hero-waitlist">
               <WaitlistForm id="waitlist-form" />
             </div>
-            <p className="text-[12px] mt-3.5 text-gray-400">
+            <p className="text-[11px] sm:text-[12px] mt-3 text-gray-400">
               Early access — we review every request personally.
             </p>
           </motion.div>
@@ -323,13 +328,14 @@ export default function App() {
       <LeadPreviewSection />
 
       {/* ── STATEMENT ── */}
-      <section className="py-24 sm:py-32 px-5 sm:px-8 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-[160px_1fr] gap-10 md:gap-20 items-start">
-          <FadeIn className="md:pt-1">
+      <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+        <div className="max-w-6xl mx-auto">
+          {/* Label above on all sizes */}
+          <FadeIn className="mb-5 sm:mb-8">
             <p className="text-[10px] uppercase tracking-[0.15em] font-medium text-gray-400">The problem</p>
           </FadeIn>
-          <div>
-            <p className="font-display font-bold leading-[1.25] text-[22px] sm:text-[28px] lg:text-[34px] text-gray-800">
+          <div className="max-w-3xl">
+            <p className="font-display font-bold leading-[1.25] text-[20px] sm:text-[26px] lg:text-[34px] text-gray-800">
               <WordReveal text="Every day, potential customers post on X about the exact problem you solve. Most founders never see them. The posts expire. The window closes. spoolx makes sure that doesn't happen to you." />
             </p>
           </div>
@@ -337,11 +343,11 @@ export default function App() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section id="how-it-works" className="py-24 sm:py-32 px-5 sm:px-8 border-t border-gray-200">
+      <section id="how-it-works" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-6xl mx-auto">
-          <FadeIn className="mb-16">
+          <FadeIn className="mb-10 sm:mb-16">
             <p className="text-[10px] uppercase tracking-[0.15em] font-medium mb-3 text-gray-400">How it works</p>
-            <h2 className="font-display font-bold text-[26px] sm:text-[34px] lg:text-[40px] leading-tight text-gray-900">
+            <h2 className="font-display font-bold text-[24px] sm:text-[32px] lg:text-[40px] leading-tight text-gray-900">
               Simple by design.
             </h2>
           </FadeIn>
@@ -363,14 +369,18 @@ export default function App() {
             },
           ].map((step, i) => (
             <FadeIn key={step.num} delay={i * 0.07}>
-              <div className="group py-9 border-b border-gray-200 grid sm:grid-cols-[72px_1fr] gap-5 sm:gap-10 items-start">
-                <span className="font-mono text-[11px] pt-0.5 tracking-widest text-gray-300">{step.num}</span>
-                <div>
-                  <h3 className="font-display font-bold text-[17px] sm:text-[20px] mb-2.5 text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
+              <div className="group py-7 sm:py-9 border-b border-gray-200">
+                {/* Mobile: number inline with title */}
+                <div className="flex items-baseline gap-3 sm:gap-0 mb-2 sm:mb-0 sm:grid sm:grid-cols-[72px_1fr] sm:gap-10 sm:items-start">
+                  <span className="font-mono text-[11px] tracking-widest text-gray-300 shrink-0 sm:pt-0.5">{step.num}</span>
+                  <h3 className="font-display font-bold text-[16px] sm:text-[20px] text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
                     {step.title}
                   </h3>
-                  <p className="text-[14px] sm:text-[15px] leading-[1.7] max-w-lg text-gray-500">{step.body}</p>
                 </div>
+                <p className="text-[13px] sm:text-[15px] leading-[1.7] text-gray-500 mt-2 sm:mt-0 sm:grid sm:grid-cols-[72px_1fr] sm:gap-10">
+                  <span className="hidden sm:block" />{/* spacer column */}
+                  <span className="max-w-lg">{step.body}</span>
+                </p>
               </div>
             </FadeIn>
           ))}
@@ -378,11 +388,11 @@ export default function App() {
       </section>
 
       {/* ── PRINCIPLES ── */}
-      <section id="principles" className="py-24 sm:py-32 px-5 sm:px-8 border-t border-gray-200">
+      <section id="principles" className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-6xl mx-auto">
-          <FadeIn className="mb-16">
+          <FadeIn className="mb-10 sm:mb-16">
             <p className="text-[10px] uppercase tracking-[0.15em] font-medium mb-3 text-gray-400">What we believe</p>
-            <h2 className="font-display font-bold text-[26px] sm:text-[34px] lg:text-[40px] leading-tight text-gray-900">
+            <h2 className="font-display font-bold text-[24px] sm:text-[32px] lg:text-[40px] leading-tight text-gray-900">
               Built with restraint.
             </h2>
           </FadeIn>
@@ -406,8 +416,10 @@ export default function App() {
               },
             ].map((p, i) => (
               <FadeIn key={p.title} delay={i * 0.06}>
-                <div className={`py-8 sm:py-10 border-b border-gray-200 ${i % 2 === 0 ? "sm:border-r sm:pr-12" : "sm:pl-12"}`}>
-                  <h3 className="font-display font-semibold text-[15px] sm:text-[16px] mb-2 text-gray-800">{p.title}</h3>
+                <div className={`py-7 sm:py-10 border-b border-gray-200 ${
+                  i % 2 === 0 ? "sm:border-r sm:pr-10 lg:pr-16" : "sm:pl-10 lg:pl-16"
+                }`}>
+                  <h3 className="font-display font-semibold text-[14px] sm:text-[16px] mb-2 text-gray-800">{p.title}</h3>
                   <p className="text-[13px] sm:text-[14px] leading-[1.7] text-gray-500">{p.body}</p>
                 </div>
               </FadeIn>
@@ -417,26 +429,26 @@ export default function App() {
       </section>
 
       {/* ── EARLY ACCESS ── */}
-      <section className="py-24 sm:py-32 px-5 sm:px-8 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1fr] gap-16 md:gap-24 items-start">
+      <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1fr] gap-10 md:gap-24 items-start">
           <FadeIn>
             <p className="text-[10px] uppercase tracking-[0.15em] font-medium mb-4 text-gray-400">Early access</p>
-            <h2 className="font-display font-bold text-[26px] sm:text-[34px] lg:text-[38px] leading-tight mb-5 text-gray-900">
-              We're building this with founders,<br className="hidden sm:block" /> not for them.
+            <h2 className="font-display font-bold text-[24px] sm:text-[32px] lg:text-[38px] leading-tight mb-5 text-gray-900">
+              We're building this with founders, not for them.
             </h2>
-            <p className="text-[14px] sm:text-[15px] leading-[1.75] max-w-sm text-gray-500">
+            <p className="text-[14px] sm:text-[15px] leading-[1.75] text-gray-500">
               spoolx is in closed early access. We're working directly with a small group of SaaS founders to understand what actually moves the needle. If you join now, you'll shape the product.
             </p>
           </FadeIn>
           <FadeIn delay={0.1} className="md:pt-10">
             <WaitlistForm id="waitlist-form-2" />
-            <div className="mt-7 pt-7 border-t border-gray-200 space-y-2.5">
+            <div className="mt-6 sm:mt-7 pt-6 sm:pt-7 border-t border-gray-200 space-y-2.5">
               {[
                 "No credit card required",
                 "We review every application personally",
                 "Early access means early influence over what we build",
               ].map(item => (
-                <p key={item} className="text-[12px] flex items-start gap-2.5 text-gray-400">
+                <p key={item} className="text-[12px] sm:text-[13px] flex items-start gap-2.5 text-gray-400">
                   <span className="mt-px shrink-0 text-gray-300">—</span>
                   {item}
                 </p>
@@ -447,10 +459,10 @@ export default function App() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="py-8 px-5 sm:px-8 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <span className="text-[15px] font-display font-bold text-gray-400">spoolx</span>
-          <p className="text-[12px] text-gray-400">
+      <footer className="py-7 sm:py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3">
+          <span className="text-[14px] sm:text-[15px] font-display font-bold text-gray-400">spoolx</span>
+          <p className="text-[11px] sm:text-[12px] text-gray-400">
             &copy; {new Date().getFullYear()} spoolx · Find your customers. Close faster.
           </p>
         </div>
